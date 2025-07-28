@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>تسجيل الحضور</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div id="qr-placeholder"></div>
+
+    <div class="form-fields">
+      <label for="username">الاسم الكامل:</label>
+      <select id="username" required>
+        <option value="">-- اختر الاسم --</option>
+        <option value="أحمد محمد">أحمد محمد</option>
+        <option value="سارة عبدالله">سارة عبدالله</option>
+        <option value="يوسف خالد">يوسف خالد</option>
+      </select>
+
+      <label for="phone">رقم الجوال (9715XXXXXXXX):</label>
+      <input type="tel" id="phone" placeholder="9715XXXXXXXX" required />
+      <small>مثال: 971501234567</small>
+    </div>
+
+    <div id="buttons-container" class="hidden">
+      <button id="check-in">تسجيل الحضور</button>
+      <button id="check-out">تسجيل الانصراف</button>
+    </div>
+
+    <div id="error-message" class="hidden error"></div>
+
+    <div id="g_id_signin"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

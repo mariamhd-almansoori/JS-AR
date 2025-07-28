@@ -1,0 +1,55 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  direction: rtl;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  padding: 20px;
+}
+
+#qr-placeholder {
+  margin-bottom: 20px;
+}
+
+.form-fields {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-fields label {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.form-fields select,
+.form-fields input {
+  padding: 10px;
+  width: 250px;
+  font-size: 1rem;
+}
+
+button {
+  margin: 10px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.hidden { display: none; }
+
+.error {
+  margin-top: 20px;
+  color: red;
+  font-weight: bold;
+}
