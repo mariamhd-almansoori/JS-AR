@@ -5,7 +5,7 @@ let userEmail = null;
 
 // QR code
 new QRCode(document.getElementById("qr-placeholder"), {
-  text: `${window.location.origin}/attend.html?token=${token}`,
+  text: `${window.location.origin}/index.html?token=${token}`,
   width: 256,
   height: 256
 });
@@ -106,7 +106,7 @@ function isValidPhone(phone) {
       phone
     };
 
-    fetch('/api/attend', {
+    fetch('https://script.google.com/macros/s/AKfycbzVkJOdbGyQQ9trP3YiCN3bXkBEop7sc9y1OSWs13LtvytuRO7apVlyEuSsAePKGHeIYA/exec', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
