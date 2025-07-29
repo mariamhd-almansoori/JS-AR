@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     };
 
                     // إرسال البيانات إلى Google Apps Script
-                    fetch('https://script.google.com/macros/s/AKfycbzVkJOdbGyQQ9trP3YiCN3bXkBEop7sc9y1OSWs13LtvytuRO7apVlyEuSsAePKGHeIYA/exec', {
+                    fetch('https://script.google.com/macros/s/AKfycbx5hY8e5001NG0wHtoAbZA5d7APVHL6-WK6mZ_rKwtY5-QYjnU-wdDLjpgeMnsROCk00g/exec', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
