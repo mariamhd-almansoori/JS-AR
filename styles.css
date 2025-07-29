@@ -1,19 +1,12 @@
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
+body {
   direction: rtl;
+  text-align: center;
   font-family: Arial, sans-serif;
+  padding: 20px;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  text-align: center;
-  padding: 20px;
+.hidden {
+  display: none;
 }
 
 #qr-placeholder {
@@ -21,35 +14,29 @@ body, html {
 }
 
 .form-fields {
-  margin-top: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.form-fields label {
-  margin-top: 10px;
-  font-weight: bold;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .form-fields select,
 .form-fields input {
-  padding: 10px;
-  width: 250px;
+  width: 260px;
+  padding: 8px 12px;
   font-size: 1rem;
 }
 
 button {
   margin: 10px;
-  padding: 12px 24px;
+  padding: 10px 24px;
   font-size: 1rem;
   cursor: pointer;
 }
 
-.hidden { display: none; }
-
-.error {
-  margin-top: 20px;
+#error-message {
   color: red;
   font-weight: bold;
+  margin-top: 15px;
 }
