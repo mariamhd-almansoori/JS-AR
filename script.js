@@ -8,11 +8,11 @@ new QRCode(document.getElementById("qr-placeholder"), {
   height: 256
 });
 
-import('https://openfpcdn.io/fingerprintjs/v4')
+import('https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js')
   .then(FingerprintJS => FingerprintJS.load())
   .then(fp => fp.get())
-  .then(res => {
-    userFingerprint = res.visitorId;
+  .then(result => {
+    userFingerprint = result.visitorId;
     initGoogleSignIn();
   });
 
