@@ -1,36 +1,30 @@
 const urlParams = new URLSearchParams(window.location.search);
 const token = urlParams.get('token') || '';
-let userFingerprint = null;
-let userEmail = null;
+let userFingerprint = null, userEmail = null;
 
-// QR code
 new QRCode(document.getElementById("qr-placeholder"), {
-  text: `${window.location.origin}/index.html?token=${token}`,
+  text: window.location.href,
   width: 256,
   height: 256
 });
 
-// FingerprintJS
-const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
-  .then(FingerprintJS => FingerprintJS.load());
-
-fpPromise.then(fp => fp.get()).then(result => {
-  userFingerprint = result.visitorId;
-  initGoogleSignIn();
-});
+import('https://openfpcdn.io/fingerprintjs/v4')
+  .then(FingerprintJS => FingerprintJS.load())
+  .then(fp => fp.get())
+  .then(res => {
+    userFingerprint = res.visitorId;
+    initGoogleSignIn();
+  });
 
 function initGoogleSignIn() {
   google.accounts.id.initialize({
     client_id: '250943951703-sbgdp0c7f7mvvp2q5o705dolc8j4i9tf.apps.googleusercontent.com',
     callback: handleCredentialResponse,
-    auto_select: false,
     ux_mode: 'popup'
   });
-
-  google.accounts.id.renderButton(
-    document.getElementById('g_id_signin'),
-    { theme: 'outline', size: 'large', text: 'signin', locale: 'ar' }
-  );
+  google.accounts.id.renderButton(document.getElementById('g_id_signin'), {
+    theme: 'outline', size: 'large', locale: 'ar'
+  });
 }
 
 function handleCredentialResponse(response) {
@@ -39,85 +33,55 @@ function handleCredentialResponse(response) {
     .then(data => {
       userEmail = data.email;
       document.getElementById('g_id_signin').classList.add('hidden');
-      checkTokenValidity();
+      document.getElementById('buttons-container').classList.remove('hidden');
     });
 }
 
-function checkTokenValidity() {
-  fetch('/api/validate_token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token, email: userEmail, fingerprint: userFingerprint })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.valid && data.email === userEmail && data.fingerprint === userFingerprint) {
-      document.getElementById('buttons-container').classList.remove('hidden');
-    } else {
-      document.getElementById('error-message').textContent = "❌ محاولة غير مصرح بها – هذا الرابط لا يخصك أو تم استخدامه من جهاز مختلف.";
-      document.getElementById('error-message').classList.remove('hidden');
-    }
-  });
-}
-
-// التعامل مع الهاتف
 const phoneInput = document.getElementById("phone");
-
 phoneInput.addEventListener("focus", () => {
-  if (!phoneInput.value.startsWith("9715")) {
-    phoneInput.value = "9715";
-  }
+  if (!phoneInput.value.startsWith("9715")) phoneInput.value = "9715";
 });
-
-phoneInput.addEventListener("keydown", function (e) {
+phoneInput.addEventListener("keydown", e => {
   const prefix = "9715";
-  if (phoneInput.selectionStart < prefix.length && (e.key === "Backspace" || e.key === "Delete")) {
+  if (phoneInput.selectionStart < prefix.length &&
+      (e.key === "Backspace" || e.key === "Delete")) {
     e.preventDefault();
   }
 });
 
-function isValidPhone(phone) {
-  return /^9715\d{8}$/.test(phone);
+function isValidPhone(p) {
+  return /^9715\d{8}$/.test(p);
 }
 
-// أزرار الحضور والانصراف
-['check-in', 'check-out'].forEach(buttonId => {
-  document.getElementById(buttonId).addEventListener('click', () => {
+['check-in', 'check-out'].forEach(id => {
+  document.getElementById(id).addEventListener('click', () => {
     const name = document.getElementById("username").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-
+    const phone = phoneInput.value.trim();
     if (!name || !phone) {
-      alert("❗ الرجاء تعبئة الاسم ورقم الجوال قبل المتابعة.");
+      alert("❗ الرجاء تعبئة الاسم ورقم الجوال.");
       return;
     }
-
     if (!isValidPhone(phone)) {
-      alert("❗ يرجى إدخال رقم جوال صحيح بصيغة 9715XXXXXXXX.");
+      alert("❗ الرقم غير صحيح بصيغة 9715XXXXXXXX.");
       return;
     }
-
     const payload = {
-      operation: buttonId === 'check-in' ? 'check-in' : 'check-out',
-      token,
-      fingerprint: userFingerprint,
-      email: userEmail,
-      ip: null,
-      name,
-      phone
+      operation: id === 'check-in' ? 'check-in' : 'check-out',
+      token, fingerprint: userFingerprint, email: userEmail,
+      name, phone, ip: null
     };
-
     fetch('https://script.google.com/macros/s/AKfycbzVkJOdbGyQQ9trP3YiCN3bXkBEop7sc9y1OSWs13LtvytuRO7apVlyEuSsAePKGHeIYA/exec', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     })
-    .then(res => res.json())
+    .then(r => r.json())
     .then(data => {
-      if (data.success) {
-        alert("✅ تم التسجيل بنجاح.");
-      } else {
-        alert(data.message || "حدث خطأ أثناء الإرسال.");
-      }
+      alert(data.success ? "✅ تم التسجيل بنجاح" : "❌ فشل التسجيل");
+    })
+    .catch(err => {
+      console.error(err);
+      alert("❌ حدث خطأ أثناء الإرسال");
     });
   });
 });
