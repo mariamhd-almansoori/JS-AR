@@ -1,3 +1,4 @@
+``html
 <!DOCTYPE html>
 <html lang="ar">
 <head>
@@ -6,14 +7,14 @@
   <title>تسجيل الحضور</title>
   <!-- تحميل مكتبة Google Identity Services بشكل غير متزامن -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <!-- تحميل مكتبة QRCode.js -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <!-- *** تم حذف علامة <script> لمكتبة qrcode.min.js *** -->
   <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-  <div id="qr-placeholder"></div>
+  <!-- *** تم حذف عنصر div ذي المعرّف qr-placeholder *** -->
 
-  <div class="form-fields">
+  <div class="form-fields hidden">
+    <!-- *** تم إضافة الفئة hidden هنا *** -->
     <select id="username" required>
       <option value="">-- اختر الاسم --</option>
       <option value="أحمد محمد">أحمد محمد</option>
@@ -25,16 +26,18 @@
   </div>
 
   <div id="buttons-container" class="hidden">
+    <!-- هذا العنصر كان لديه الفئة hidden بالفعل -->
     <button id="check-in">تسجيل الحضور</button>
     <button id="check-out">تسجيل الانصراف</button>
   </div>
 
   <div id="error-message" class="hidden"></div>
   <div id="g_id_signin"></div>
+  <!-- هذا العنصر سيكون مرئيا في البداية وسيتم إخفاؤه بواسطة script.js بعد تسجيل الدخول -->
+
 
   <!--
-    نقل تحميل script.js إلى هنا (أسفل المكتبات وقبل إغلاق وسم body)
-    للتأكد من تحميل المكتبات وعناصر الـ DOM قبل تنفيذ الكود.
+    علامة script.js في نهاية body لضمان تحميل DOM والمكتبات
   -->
   <script src="script.js"></script>
 </body>
