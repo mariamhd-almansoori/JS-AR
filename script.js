@@ -21,7 +21,7 @@ fpPromise.then(fp => fp.get()).then(result => {
 
 function initGoogleSignIn() {
   google.accounts.id.initialize({
-    client_id: 'YOUR_GOOGLE_CLIENT_ID',
+    client_id: '250943951703-sbgdp0c7f7mvvp2q5o705dolc8j4i9tf.apps.googleusercontent.com',
     callback: handleCredentialResponse,
     auto_select: false,
     ux_mode: 'popup'
