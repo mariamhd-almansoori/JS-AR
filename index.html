@@ -4,7 +4,9 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>تسجيل الحضور</title>
+  <!-- تحميل مكتبة Google Identity Services بشكل غير متزامن -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- تحميل مكتبة QRCode.js -->
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
   <link rel="stylesheet" href="styles.css"/>
 </head>
@@ -30,6 +32,10 @@
   <div id="error-message" class="hidden"></div>
   <div id="g_id_signin"></div>
 
+  <!--
+    نقل تحميل script.js إلى هنا (أسفل المكتبات وقبل إغلاق وسم body)
+    للتأكد من تحميل المكتبات وعناصر الـ DOM قبل تنفيذ الكود.
+  -->
   <script src="script.js"></script>
 </body>
 </html>
