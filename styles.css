@@ -40,3 +40,21 @@ button {
   font-weight: bold;
   margin-top: 15px;
 }
+
+/* دعم التباين العالي */
+@media (forced-colors: active) {
+  body {
+    background: Window;
+    color: WindowText;
+  }
+  button {
+    border: 2px solid ButtonText;
+    background: ButtonFace;
+    color: ButtonText;
+  }
+  input, select {
+    background: Field;
+    color: FieldText;
+    border: 1px solid ButtonText;
+  }
+}
