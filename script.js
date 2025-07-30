@@ -114,8 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function isValidPhone(p) {
-    return /^9715\\d{8}$/.test(p);
+  function isValidPhone(phone) {
+    return /^9715\d{8}$/.test(phone);
   }
 
   function setupCheckButtons() {
