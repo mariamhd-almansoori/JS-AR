@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     };
 
                     // إرسال البيانات إلى Google Apps Script
-                    fetch('https://script.google.com/macros/s/AKfycbx5hY8e5001NG0wHtoAbZA5d7APVHL6-WK6mZ_rKwtY5-QYjnU-wdDLjpgeMnsROCk00g/exec', {
+                    fetch('https://script.google.com/macros/s/AKfycby02ie58KVNwgkmvsLt_IaXnwtJkitKoEcyFIXaplElxGQ6Y9MJ-7_fViZdjq81fxPvgw/exec', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
@@ -192,7 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                     .catch(err => {
                         console.error("Error sending data to Google Script:", err);
-                        alert("❌ حدث خطأ أثناء الإرسال");
+                        alert("❌ حدث خطأ أثناء الإرسال:\n" + err.message);
+                        console.error("تفاصيل الخطأ:", err);
                     });
                 });
             } else {
