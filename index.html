@@ -1,38 +1,43 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>سجل الحضور والإنصراف</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  https://accounts.google.com/gsi/client
-  <script src="script.js" defer></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>تسجيل الحضور</title>
+  <!-- تحميل مكتبة Google Identity Services بشكل غير متزامن -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- *** تم حذف علامة <script> لمكتبة qrcode.min.js *** -->
+  <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-  <h1>سجل الحضور والإنصراف</h1>
+  <!-- *** تم حذف عنصر div ذي المعرّف qr-placeholder *** -->
 
-  <div id="g_id_signin" class="hidden"></div>
-
-  <div id="form-fields" class="form-fields hidden">
-    <select id="username">
-      <option disabled selected> يرجى تحديد الاسم </option>
-      <option>أحمد</option>
-      <option>محمد</option>
-      <option>سارة</option>
-      <option>عبدالله</option>
-      <option>يوسف</option>
-      <option>خالد</option>
+  <div class="form-fields hidden">
+    <!-- *** تم إضافة الفئة hidden هنا *** -->
+    <select id="username" required>
+      <option value="">-- اختر الاسم --</option>
+      <option value="أحمد محمد">أحمد محمد</option>
+      <option value="سارة عبدالله">سارة عبدالله</option>
+      <option value="يوسف خالد">يوسف خالد</option>
     </select>
-
-    <input type="tel" id="phone" placeholder="مثال: 971501234567" />
+    <input type="tel" id="phone" placeholder="9715XXXXXXXX" required />
+    <small>مثال: 971501234567</small>
   </div>
 
   <div id="buttons-container" class="hidden">
+    <!-- هذا العنصر كان لديه الفئة hidden بالفعل -->
     <button id="check-in">تسجيل الحضور</button>
     <button id="check-out">تسجيل الانصراف</button>
   </div>
 
   <div id="error-message" class="hidden"></div>
-  <div id="status-message" class="hidden" style="margin-top: 15px; font-weight: bold;"></div>
+  <div id="g_id_signin"></div>
+  <!-- هذا العنصر سيكون مرئيا في البداية وسيتم إخفاؤه بواسطة script.js بعد تسجيل الدخول -->
+
+
+  <!--
+    علامة script.js في نهاية body لضمان تحميل DOM والمكتبات
+  -->
+  <script src="script.js"></script>
 </body>
 </html>
