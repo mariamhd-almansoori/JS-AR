@@ -4,6 +4,22 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>تسجيل الحضور</title>
+  <script
+      src="https://js-de.sentry-cdn.com/7b23924c66cbc434e36d765203ee6d55.min.js"
+      crossorigin="anonymous"
+    ></script>
+  <script>
+                    Sentry.onLoad(function() {
+                      Sentry.init({
+                          dsn: "https://7b23924c66cbc434e36d765203ee6d55@o4509758163451904.ingest.de.sentry.io/4509758170988624", // هذا هو DSN الخاص بمشروعك
+                          // Tracing (اختياري، يتعلق بأداء التطبيق)
+                          tracesSampleRate: 1.0,
+                          // Session Replay (اختياري، يسجل جلسة المستخدم)
+                          replaysSessionSampleRate: 0.1,
+                          replaysOnErrorSampleRate: 1.0,
+                        });
+                    });
+                  </script>
   <!-- تحميل مكتبة Google Identity Services بشكل غير متزامن -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <!-- *** تم حذف علامة <script> لمكتبة qrcode.min.js *** -->
