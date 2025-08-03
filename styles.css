@@ -20,8 +20,8 @@ body {
 
 /* تخصيص حاوية زر تسجيل الدخول بـ Google */
 #g_id_signin {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 50px;
+    margin-bottom: 50px;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -41,7 +41,7 @@ body {
   display: flex; /* للحفاظ على Flexbox الموجود */
   flex-direction: column;
   align-items: center;
-  gap: 0px;
+  gap: 15px;
 }
 
 /* لـ form-fields تحديدًا إذا أردت خصائص مختلفة قليلاً */
@@ -96,5 +96,6 @@ button {
     border: 1px solid ButtonText;
   }
 }
+
 
 
