@@ -13,6 +13,8 @@
                       Sentry.init({
                           dsn: "https://7b23924c66cbc434e36d765203ee6d55@o4509758163451904.ingest.de.sentry.io/4509758170988624", // هذا هو DSN الخاص بمشروعك
                           // Tracing (اختياري، يتعلق بأداء التطبيق)
+                        
+                          release: "AttendanceApp@1.0.0", // <=== استبدل برقم الإصدار الفعلي ===>
                           tracesSampleRate: 1.0,
                           // Session Replay (اختياري، يسجل جلسة المستخدم)
                           replaysSessionSampleRate: 0.1,
@@ -36,8 +38,8 @@
       <option value="سارة عبدالله">سارة عبدالله</option>
       <option value="يوسف خالد">يوسف خالد</option>
     </select>
-    <input type="tel" id="phone" placeholder="9715XXXXXXXX" required />
-    <small>مثال: 971501234567</small>
+    <select id="username" required autocomplete="name">...</select>
+        <input type="tel" id="phone" placeholder="9715XXXXXXXX" required autocomplete="tel" />
   </div>
 
   <div id="buttons-container" class="hidden">
