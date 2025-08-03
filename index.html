@@ -30,17 +30,16 @@
 <body>
   <!-- *** تم حذف عنصر div ذي المعرّف qr-placeholder *** -->
 
-  <div class="form-fields hidden">
-    <!-- *** تم إضافة الفئة hidden هنا *** -->
-    <select id="username" required>
-      <option value="">-- اختر الاسم --</option>
-      <option value="أحمد محمد">أحمد محمد</option>
-      <option value="سارة عبدالله">سارة عبدالله</option>
-      <option value="يوسف خالد">يوسف خالد</option>
-    </select>
-    <select id="username" required autocomplete="name">...</select>
-        <input type="tel" id="phone" placeholder="9715XXXXXXXX" required autocomplete="tel" />
-  </div>
+  <div id="form-fields" class="form-fields hidden">
+            <select id="username" required autocomplete="name"> // تأكد من وجود autocomplete هنا
+              <option value="">-- اختر الاسم --</option>
+              <option value="أحمد محمد">أحمد محمد</option>
+              <option value="سارة عبدالله">سارة عبدالله</option>
+              <option value="يوسف خالد">يوسف خالد</option>
+            </select>
+            <input type="tel" id="phone" placeholder="9715XXXXXXXX" required autocomplete="tel" />
+            <small>مثال: 971501234567</small>
+        </div>
 
   <div id="buttons-container" class="hidden">
     <!-- هذا العنصر كان لديه الفئة hidden بالفعل -->
@@ -59,3 +58,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
