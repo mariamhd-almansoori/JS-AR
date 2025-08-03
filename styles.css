@@ -20,8 +20,8 @@ body {
 
 /* تخصيص حاوية زر تسجيل الدخول بـ Google */
 #g_id_signin {
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -96,4 +96,5 @@ button {
     border: 1px solid ButtonText;
   }
 }
+
 
