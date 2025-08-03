@@ -1,7 +1,7 @@
 body {
   direction: rtl;
   text-align: center;
-  font-family: Arial, sans-serif;
+  font-family: 'Tahoma', 'Arial', sans-serif;
   padding: 50px;
 
   /* إضافة Flexbox لتوسيط المحتوى الأبوي (body) */
@@ -10,10 +10,12 @@ body {
   align-items: center; /* توسيط العناصر أفقيًا في الحاوية المرنة */
   justify-content: center; /* توسيط العناصر رأسيًا (إذا كان هناك مساحة كافية) */
   min-height: 100vh; /* جعل ال body يأخذ ارتفاع الشاشة الكامل على الأقل */
-  margin: 30; /* إزالة الهامش الافتراضي لل body */
+  margin: 0; /* إزالة الهامش الافتراضي لل body */
   background-color: #f0f0f0; /* إضافة لون خلفية خفيف للجسم لرؤية الظل */
 }
 
+.success { color: green; }
+.error { color: red; }
 .hidden {
   display: none;
 }
@@ -97,5 +99,18 @@ button {
   }
 }
 
-
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+  .form-fields,
+  #buttons-container {
+    padding: 10px;
+    width: 100%;
+  }
+  .form-fields select,
+  .form-fields input {
+    width: 100%;
+  }
+}
 
