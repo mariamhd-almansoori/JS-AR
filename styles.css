@@ -2,7 +2,7 @@ body {
   direction: rtl;
   text-align: center;
   font-family: Arial, sans-serif;
-  padding: 20px;
+  padding: 50px;
 
   /* إضافة Flexbox لتوسيط المحتوى الأبوي (body) */
   display: flex;
@@ -10,7 +10,7 @@ body {
   align-items: center; /* توسيط العناصر أفقيًا في الحاوية المرنة */
   justify-content: center; /* توسيط العناصر رأسيًا (إذا كان هناك مساحة كافية) */
   min-height: 100vh; /* جعل ال body يأخذ ارتفاع الشاشة الكامل على الأقل */
-  margin: 0; /* إزالة الهامش الافتراضي لل body */
+  margin: 30; /* إزالة الهامش الافتراضي لل body */
   background-color: #f0f0f0; /* إضافة لون خلفية خفيف للجسم لرؤية الظل */
 }
 
@@ -20,8 +20,8 @@ body {
 
 /* تخصيص حاوية زر تسجيل الدخول بـ Google */
 #g_id_signin {
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-top: 50px;
+    margin-bottom: 50px;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -35,13 +35,13 @@ body {
   border-radius: 8px; /* زوايا مستديرة */
   padding: 20px; /* مسافة داخلية حول المحتوى */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* إضافة ظل خفيف */
-  margin-top: 20px; /* مسافة علوية */
-  margin-bottom: 20px; /* مسافة سفلية */
+  margin-top: 100px; /* مسافة علوية */
+  margin-bottom: 10px; /* مسافة سفلية */
   /* الخصائص الموجودة بالفعل للحاوية */
   display: flex; /* للحفاظ على Flexbox الموجود */
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 0px;
 }
 
 /* لـ form-fields تحديدًا إذا أردت خصائص مختلفة قليلاً */
@@ -96,3 +96,4 @@ button {
     border: 1px solid ButtonText;
   }
 }
+
