@@ -9,10 +9,6 @@ body {
   display: none;
 }
 
-#qr-placeholder {
-  margin-bottom: 20px;
-}
-
 .form-fields {
   display: flex;
   flex-direction: column;
@@ -58,3 +54,4 @@ button {
     border: 1px solid ButtonText;
   }
 }
+
