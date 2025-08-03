@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>سجل الحضور والإنصراف</title>
+  <title>تسجيل الحضور</title>
 
   <!-- Sentry Loader Script -->
   <script src="https://js-de.sentry-cdn.com/7b23924c66cbc434e36d765203ee6d55.min.js" crossorigin="anonymous"></script>
@@ -11,24 +11,21 @@
       Sentry.onLoad(function() {
         Sentry.init({
             dsn: "https://7b23924c66cbc434e36d765203ee6d55@o4509758163451904.ingest.de.sentry.io/4509758170988624",
-            release: "AttendanceApp@1.1.0", // تأكد من تحديث هذا عند النشر
+            release: "AttendanceApp@1.0.0", // تأكد من تحديث هذا عند النشر
             tracesSampleRate: 1.0,
             replaysSessionSampleRate: 0.1,
             replaysOnErrorSampleRate: 1.0,
           });
-           // Sentry.setUser يمكن استدعاؤها في script.js بعد الحصول على userEmail
       });
     </script>
 
   <!-- Google Identity Services Script -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-  <!-- *** FingerprintJS Open Source Loader Script (أضف هذا) *** -->
+  <!-- FingerprintJS Open Source Loader Script -->
   <script>
-    window.userFingerprint = 'getting'; // حالة أولية (يمكن تغييرها)
-
-    // استخدم openfpcdn.io للمكتبة مفتوحة المصدر
-    import('https://openfpcdn.io/fingerprintjs/v4')
+    window.userFingerprint = 'getting';
+    import('https://openfpcdn.io/fingerprintjs/v4') // أو cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js
       .then(FingerprintJS => {
         if (FingerprintJS && FingerprintJS.load) {
            FingerprintJS.load()
@@ -64,30 +61,40 @@
   <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-  <!-- كل المحتوى المرئي للصفحة -->
-
+  <!-- العناصر العلوية -->
   <div id="status-message" class="hidden"></div>
   <div id="error-message" class="hidden"></div>
 
-  <div id="g_id_signin"></div> <!-- زر جوجل -->
+  <!-- زر تسجيل الدخول بـ Google -->
+  <div id="g_id_signin"></div>
 
-  <div id="form-and-buttons-containers" class="hidden"> <!-- حاوية النموذج -->
-      <select id="username" required autocomplete="name">
-        <option value="">-- اختر الاسم --</option>
-        <option value="أحمد محمد">أحمد محمد</option>
-        <option value="سارة عبدالله">سارة عبدالله</option>
-        <option value="يوسف خالد">يوسف خالد</option>
-      </select>
-      <input type="tel" id="phone" placeholder="9715XXXXXXXX" required autocomplete="tel" />
-      <small>مثال: 971501234567</small>
-       <button id="check-in">تسجيل الحضور</button>
-      <button id="check-out">تسجيل الانصراف</button>
+  <!-- *** حاوية رئيسية جديدة للنموذج والأزرار (مخفية في البداية) *** -->
+  <div id="form-and-buttons-container" class="hidden">
+
+      <!-- حاوية حقول النموذج (الآن ليست مخفية بذاتها) -->
+      <div id="form-fields" class="form-fields">
+          <select id="username" required autocomplete="name">
+            <option value="">-- اختر الاسم --</option>
+            <option value="أحمد محمد">أحمد محمد</option>
+            <option value="سارة عبدالله">سارة عبدالله</option>
+            <option value="يوسف خالد">يوسف خالد</option>
+          </select>
+          <input type="tel" id="phone" placeholder="9715XXXXXXXX" required autocomplete="tel" />
+          <small>مثال: 971501234567</small>
+      </div>
+
+      <!-- حاوية الأزرار (الآن ليست مخفية بذاتها) -->
+      <div id="buttons-container">
+          <button id="check-in">تسجيل الحضور</button>
+          <button id="check-out">تسجيل الانصراف</button>
+      </div>
+
   </div>
+  <!-- *** نهاية الحاوية الرئيسية الجديدة *** -->
+
 
   <!-- سكريبتك الرئيسي في نهاية body -->
   <script src="script.js"></script>
 
 </body>
 </html>
-
-
