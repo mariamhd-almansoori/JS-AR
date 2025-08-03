@@ -3,59 +3,48 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>تسجيل الحضور</title>
-  <script
-      src="https://js-de.sentry-cdn.com/7b23924c66cbc434e36d765203ee6d55.min.js"
-      crossorigin="anonymous"
-    ></script>
+  <title>سجل الحضور</title>
+  <!-- كل وسوم script و link في ال head -->
+  <script src="https://js-de.sentry-cdn.com/7b23924c66cbc434e36d765203ee6d55.min.js" crossorigin="anonymous"></script>
   <script>
-                    Sentry.onLoad(function() {
-                      Sentry.init({
-                          dsn: "https://7b23924c66cbc434e36d765203ee6d55@o4509758163451904.ingest.de.sentry.io/4509758170988624", // هذا هو DSN الخاص بمشروعك
-                          // Tracing (اختياري، يتعلق بأداء التطبيق)
-                        
-                          release: "AttendanceApp@1.0.0", // <=== استبدل برقم الإصدار الفعلي ===>
-                          tracesSampleRate: 1.0,
-                          // Session Replay (اختياري، يسجل جلسة المستخدم)
-                          replaysSessionSampleRate: 0.1,
-                          replaysOnErrorSampleRate: 1.0,
-                        });
-                    });
-                  </script>
-  <!-- تحميل مكتبة Google Identity Services بشكل غير متزامن -->
+      Sentry.onLoad(function() {
+        Sentry.init({
+            dsn: "https://7b23924c66cbc434e36d765203ee6d55@o4509758163451904.ingest.de.sentry.io/4509758170988624",
+            release: "AttendanceApp@1.1.0",
+            tracesSampleRate: 1.0,
+            replaysSessionSampleRate: 0.1,
+            replaysOnErrorSampleRate: 1.0,
+          });
+      });
+    </script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <!-- *** تم حذف علامة <script> لمكتبة qrcode.min.js *** -->
   <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-  <!-- *** تم حذف عنصر div ذي المعرّف qr-placeholder *** -->
+  <!-- كل المحتوى المرئي للصفحة في ال body -->
 
-  <div id="form-fields" class="form-fields hidden">
-            <select id="username" required autocomplete="name"> // تأكد من وجود autocomplete هنا
-              <option value="">-- اختر الاسم --</option>
-              <option value="أحمد محمد">أحمد محمد</option>
-              <option value="سارة عبدالله">سارة عبدالله</option>
-              <option value="يوسف خالد">يوسف خالد</option>
-            </select>
-            <input type="tel" id="phone" placeholder="9715XXXXXXXX" required autocomplete="tel" />
-            <small>مثال: 971501234567</small>
-        </div>
+  <div id="status-message" class="hidden"></div>
+  <div id="error-message" class="hidden"></div>
 
-  <div id="buttons-container" class="hidden">
-    <!-- هذا العنصر كان لديه الفئة hidden بالفعل -->
-    <button id="check-in">تسجيل الحضور</button>
-    <button id="check-out">تسجيل الانصراف</button>
+  <div id="g_id_signin"></div> <!-- زر جوجل -->
+
+  <div id="form-fields" class="form-fields hidden"> <!-- حاوية النموذج -->
+      <select id="username" required autocomplete="name">
+        <option value="">-- اختر الاسم --</option>
+        <option value="أحمد محمد">أحمد محمد</option>
+        <option value="سارة عبدالله">سارة عبدالله</option>
+        <option value="يوسف خالد">يوسف خالد</option>
+      </select>
+      <input type="tel" id="phone" placeholder="9715XXXXXXXX" required autocomplete="tel" />
+      <small>مثال: 971501234567</small>
   </div>
 
-  <div id="error-message" class="hidden"></div>
-  <div id="g_id_signin"></div>
-  <!-- هذا العنصر سيكون مرئيا في البداية وسيتم إخفاؤه بواسطة script.js بعد تسجيل الدخول -->
+  <div id="buttons-container" class="hidden"> <!-- حاوية الأزرار -->
+      <button id="check-in">تسجيل الحضور</button>
+      <button id="check-out">تسجيل الانصراف</button>
+  </div>
 
+  <script src="script.js"></script> <!-- سكريبتك الرئيسي في نهاية body -->
 
-  <!--
-    علامة script.js في نهاية body لضمان تحميل DOM والمكتبات
-  -->
-  <script src="script.js"></script>
 </body>
 </html>
-
