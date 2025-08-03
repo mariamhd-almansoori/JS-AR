@@ -24,42 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // بصمة الجهاز
-  import('https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js')
-    .then(FingerprintJS => {
-      if (FingerprintJS && FingerprintJS.load) {
-        FingerprintJS.load()
-          .then(fp => fp.get())
-          .then(result => {
-            userFingerprint = result.visitorId;
-            console.log("Fingerprint obtained:", userFingerprint);
-          })
-          .catch(err => {
-            console.error("Error getting fingerprint:", err);
-            // التقاط الخطأ في Sentry عند فشل الحصول على البصمة
-            if (typeof Sentry !== 'undefined' && Sentry.captureException) {
-                 Sentry.captureException(err);
-            }
-            userFingerprint = 'unavailable';
-          });
-      } else {
-        console.error("FingerprintJS library not loaded correctly.");
-        // التقاط الخطأ في Sentry إذا لم يتم تحميل المكتبة بشكل صحيح
-        if (typeof Sentry !== 'undefined' && Sentry.captureMessage) {
-             Sentry.captureMessage("FingerprintJS library not loaded correctly.");
-        }
-        userFingerprint = 'load_failed';
-      }
-    })
-    .catch(err => {
-      console.error('Failed to load FingerprintJS module:', err);
-      // التقاط الخطأ في Sentry عند فشل استيراد المكتبة
-      if (typeof Sentry !== 'undefined' && Sentry.captureException) {
-           Sentry.captureException(err);
-      }
-      userFingerprint = 'import_failed';
-    });
-
   // تسجيل الدخول بـ Google
   function initGoogleSignIn() {
     if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
@@ -193,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const payload = {
             operation: id === 'check-in' ? 'check-in' : 'check-out',
             token,
-            fingerprint: userFingerprint,
+            fingerprint: window.userFingerprint, // <--- استخدم المتغير العالمي هنا
             email: userEmail,
             name,
             phone,
@@ -264,3 +228,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initGoogleSignIn();
 });
+
