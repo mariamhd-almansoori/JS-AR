@@ -70,12 +70,30 @@ document.addEventListener('DOMContentLoaded', () => {
         userEmail = data.email;
         console.log("User logged in with email:", userEmail);
 
-        // في هذه النقطة، نعلم أن المستخدم قام بتسجيل الدخول بنجاح
-        // يمكننا إبلاغ Sentry عن المستخدم الحالي (اخياري ومفيد لتتبع الأخطاء حسب المستخدم)
         if (typeof Sentry !== 'undefined' && Sentry.setUser) {
             Sentry.setUser({ email: userEmail });
         }
 
+        // *** تعديل هنا: اخفِ زر جوجل وأظهر الحاوية الرئيسية الجديدة ***
+        document.getElementById('g_id_signin')?.classList.add('hidden');
+        document.getElementById('form-and-buttons-container')?.classList.remove('hidden'); // <--- هذا هو التعديل الرئيسي
+
+        setupPhoneInput();
+        setupCheckButtons();
+      })
+      .catch(err => {
+        console.error("Error fetching Google token info:", err);
+        if (typeof Sentry !== 'undefined' && Sentry.captureException) {
+             Sentry.captureException(err);
+        }
+        showMessage("❌ حدث خطأ أثناء التحقق من تسجيل الدخول بـ Google", false);
+        const errorMessageElement = document.getElementById('error-message');
+        if (errorMessageElement) {
+          errorMessageElement.textContent = "فشل التحقق من معلومات تسجيل الدخول بـ Google.";
+          errorMessageElement.classList.remove('hidden');
+        }
+      });
+  }
 
         document.getElementById('g_id_signin')?.classList.add('hidden');
         document.getElementById('buttons-container')?.classList.remove('hidden');
@@ -228,4 +246,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initGoogleSignIn();
 });
+
 
