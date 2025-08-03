@@ -13,17 +13,31 @@ document.addEventListener('DOMContentLoaded', () => {
   let userEmail = null;
 
   // دالة عرض الرسائل داخل الصفحة
-  function showMessage(msg, success = true) {
-    const el = document.getElementById("status-message");
+  function showMessage(msg, {
+    elementId = "status-message",
+    success = true,
+    duration = null, // بالميلي ثانية مثال: 5000 = 5 ثواني
+    focus = false
+} = {}) {
+    const el = document.getElementById(elementId);
     if (el) {
-      el.textContent = msg;
-      el.style.color = success ? "green" : "red";
-      el.classList.remove("hidden");
-    } else {
-      alert(msg); // fallback
-    }
-  }
+        el.textContent = msg;
+        el.classList.remove("hidden", "success", "error");
+        el.classList.add(success ? "success" : "error");
+        el.setAttribute("role", "status"); // من أجل الوصولية
+        if (focus) el.focus();
 
+        // إخفاء الرسالة بعد مدة معينة
+        if (duration) {
+            setTimeout(() => {
+                el.classList.add("hidden");
+                el.textContent = "";
+            }, duration);
+        }
+    } else {
+        alert(msg); // في حال لم يوجد العنصر
+    }
+}
   // تسجيل الدخول بـ Google
   function initGoogleSignIn() {
     if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
@@ -246,5 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initGoogleSignIn();
 });
+
 
 
