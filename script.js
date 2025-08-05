@@ -237,64 +237,63 @@ document.addEventListener('DOMContentLoaded', () => {
             return; // إيقاف الدالة إذا كانت الحقول فارغة
           }
 
-          // التحقق من صحة صيغة رقم الهاتف
-          if (!isValidPhone(phone)) {
-            showMessage("❗ الرقم غير صحيح بصيغة 9715XXXXXXXX.", { success: false, focus: true, duration: 5000 });
-            if (typeof Sentry !== 'undefined' && Sentry.captureMessage) {
+            // التحقق من صحة صيغة رقم الهاتف
+            if (!isValidPhone(phone)) {
+              showMessage("❗ الرقم غير صحيح بصيغة 9715XXXXXXXX.", { success: false, focus: true, duration: 5000 });
+              if (typeof Sentry !== 'undefined' && Sentry.captureMessage) {
                 Sentry.captureMessage("Invalid phone format entered", Sentry.SeverityLevel.Warning);
+              }
+              return; // إيقاف الدالة إذا كانت الصيغة غير صحيحة
             }
-            return; // إيقاف الدالة إذا كانت الصيغة غير صحيحة
-          }
-
-          // إنشاء حمولة البيانات للإرسال إلى Google Apps Script
-          const payload = {
-            operation: id === 'check-in' ? 'check-in' : 'check-out',
-            token: token, // استخدام ال token من الـ URL
-            fingerprint: window.userFingerprint, // استخدام البصمة من المتغير العالمي
-            email: userEmail, // استخدام البريد الإلكتروني من تسجيل الدخول
-            name: name, // استخدام الاسم المدخل
-            phone: phone, // استخدام رقم الهاتف المدخل
-            ip: null // IP غير متاح مباشرة في المتصفح، يمكن الحصول عليه من السكربت إذا لزم الأمر
-          };
-
-          console.log("Payload prepared:", payload); // عرض حمولة البيانات
-
-          // إرسال البيانات إلى Google Apps Script باستخدام fetch API
-          // تأكد من تحديث الـ URL الخاص بالسكربت هنا إذا تغير بعد النشر
-          fetch('https://script.google.com/macros/s/AKfycby02ie58KVNwgkmvsLt_IaXnwtJkitKoEcyFIXaplElxGQ6Y9MJ-7_fViZdjq81fxPvgw/exec', {
-            method: 'POST',
-            headers: {
-               'Content-Type': 'application/json'
-               // Apps Script عادة لا يتطلب Cors headers خاصة إذا تم نشره للجميع
-            },
-            body: JSON.stringify(payload) // تحويل كائن البيانات إلى سلسلة JSON
-          })
-          .then(r => {
-            console.log("Received response from Google Script:", r); // عرض الاستجابة الأولية
-            if (!r.ok) {
-               // إذا كانت الاستجابة ليست OK (مثل 400, 500)، اطرح خطأ
-               // محاولة قراءة جسم الاستجابة إذا كان JSON لإعطاء تفاصيل أكثر
-               return r.json().catch(() => { throw new Error(`Google Script HTTP error! status: ${r.status}`); });
-            }
-            return r.json(); // قراءة جسم الاستجابة كـ JSON
-          })
-          .then(data => {
-            console.log("Google Script response data:", data); // عرض بيانات الاستجابة
-
-            // التحقق من بنية الاستجابة (نبحث عن خاصية success)
-            if (data && typeof data.success !== 'undefined') {
-              // عرض رسالة نجاح أو فشل بناءً على استجابة السكربت
-              showMessage(data.success ? "✅ تم التسجيل بنجاح" : "❌ فشل التسجيل", { success: data.success, duration: 5000 });
-               // تسجيل نتيجة الإرسال في Sentry كـ breadcrumb
-               if (typeof Sentry !== 'undefined' && Sentry.addBreadcrumb) {
+          
+          // جلب عنوان الـ IP ثم إرسال البيانات
+          fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+              const userIp = data.ip;
+              const payload = {
+                email: userEmail,
+                name: name,
+                phone: phone,
+                fingerprint: window.userFingerprint,
+                operation: id === 'check-in' ? 'check-in' : 'check-out',
+                token: token,
+                ip: userIp
+              };
+          
+              return fetch('https://script.google.com/macros/s/AKfycby02ie58KVNwgkmvsLt_IaXnwtJkitKoEcyFIXaplElxGQ6Y9MJ-7_fViZdjq81fxPvgw/exec', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              });
+            })
+            .then(r => {
+              console.log("Received response from Google Script:", r);
+              if (!r.ok) {
+                return r.json().catch(() => { throw new Error(`Google Script HTTP error! status: ${r.status}`); });
+              }
+              return r.json();
+            })
+            .then(data => {
+              console.log("Google Script response data:", data);
+              if (data && typeof data.success !== 'undefined') {
+                showMessage(data.success ? "✅ تم التسجيل بنجاح" : "❌ فشل التسجيل", { success: data.success, duration: 5000 });
+                if (typeof Sentry !== 'undefined' && Sentry.addBreadcrumb) {
                   Sentry.addBreadcrumb({
-                      category: 'action',
-                      message: `Google Script submission result: ${data.success ? 'Success' : 'Failure'}`,
-                      level: data.success ? Sentry.SeverityLevel.Info : Sentry.SeverityLevel.Error,
-                      data: payload // اختياري: يمكنك تضمين البيانات المرسلة في breadcrumb
+                    category: 'action',
+                    message: `Google Script submission result: ${data.success ? 'Success' : 'Failure'}`,
+                    level: data.success ? Sentry.SeverityLevel.Info : Sentry.SeverityLevel.Error,
+                    data: payload
                   });
-               }
-            } else {
+                }
+              } else {
+                showMessage("❌ لم يتم استقبال استجابة صحيحة من السكربت.", { success: false, duration: 5000 });
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              showMessage("❌ حدث خطأ أثناء الإرسال.", { success: false, duration: 5000 });
+            });
               // استجابة غير متوقعة من السكربت
               showMessage("⚠️ تم الإرسال، ولكن استجابة الخادم غير متوقعة.", { success: false, duration: 10000, focus: true });
               console.warn("Unexpected response from Google Script:", data);
@@ -344,3 +343,4 @@ document.addEventListener('DOMContentLoaded', () => {
 // قد تحتاج لبعض الدوال المساعدة أو المتغيرات خارج DOMContentLoaded إذا كانت ضرورية عالميًا،
 // لكن معظم الكود المتعلق بالتفاعل مع الصفحة يجب أن يكون بداخله.
 // window.userFingerprint و userEmail تم تعريفهما في نطاقات مناسبة الآن.
+
