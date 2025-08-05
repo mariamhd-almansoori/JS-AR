@@ -50,28 +50,35 @@
   </div>
 
   <!-- نموذج التسجيل -->
-  <form id="attendance-form">
-    <div id="form-and-buttons-container" class="hidden">
+<form id="attendance-form">
+  <div id="form-and-buttons-container" class="hidden">
 
-      <div id="form-fields" class="form-fields">
+    <!-- بطاقة متكاملة للنموذج -->
+    <div class="form-card">
+      
+      <!-- الحقول -->
+      <div class="form-fields">
         <select id="username" name="username" required autocomplete="name">
           <option value="">-- اختر الاسم --</option>
           <option value="أحمد محمد">أحمد محمد</option>
           <option value="سارة عبدالله">سارة عبدالله</option>
           <option value="يوسف خالد">يوسف خالد</option>
         </select>
-
         <input type="tel" id="phone" name="phone" placeholder="9715XXXXXXXX" required autocomplete="tel" />
         <small>مثال: 971501234567</small>
       </div>
 
+      <!-- الأزرار -->
       <div id="buttons-container">
         <button type="submit" name="action" value="check-in">تسجيل الحضور</button>
         <button type="submit" name="action" value="check-out">تسجيل الانصراف</button>
       </div>
 
     </div>
-  </form>
+
+  </div>
+</form>
+
 
   <div id="status-message" class="hidden"></div>
   <div id="error-message" class="hidden"></div>
@@ -79,3 +86,4 @@
   <script src="script.js" defer></script>
 </body>
 </html>
+
