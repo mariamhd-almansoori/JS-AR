@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const messageContainer = document.getElementById('message-container');
+  const formContainer = document.getElementById('form-and-buttons-container');
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token') || '';
   let userEmail = null;
@@ -181,4 +183,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initGoogleSignIn();
 });
-
