@@ -3,69 +3,61 @@ body {
   text-align: center;
   font-family: 'Tahoma', 'Arial', sans-serif;
   padding: 50px;
-
-  /* إضافة Flexbox لتوسيط المحتوى الأبوي (body) */
   display: flex;
-  flex-direction: column; /* ترتيب العناصر عموديًا */
-  align-items: center; /* توسيط العناصر أفقيًا في الحاوية المرنة */
-  justify-content: center; /* توسيط العناصر رأسيًا (إذا كان هناك مساحة كافية) */
-  min-height: 100vh; /* جعل ال body يأخذ ارتفاع الشاشة الكامل على الأقل */
-  margin: 0; /* إزالة الهامش الافتراضي لل body */
-  background-color: #f0f0f0; /* إضافة لون خلفية خفيف للجسم لرؤية الظل */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
 }
 
 .success { color: green; }
 .error { color: red; }
-.hidden {
+.hidden { display: none; }
+
+body.login-mode {
+  overflow: hidden;
+}
+
+#google-login-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+body.login-mode #form-and-buttons-container {
   display: none;
 }
 
-/* تخصيص حاوية زر تسجيل الدخول بـ Google */
-#g_id_signin {
-    margin-top: 50px;
-    margin-bottom: 50px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* إضافة أنماط Border و Shadow لحاويتي النموذج والأزرار */
 .form-fields,
 #buttons-container {
-  background-color: #fff; /* خلفية بيضاء لتوضيح الحدود والظل */
-  border: 1px solid #ccc; /* حدود رمادية فاتحة */
-  border-radius: 8px; /* زوايا مستديرة */
-  padding: 20px; /* مسافة داخلية حول المحتوى */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* إضافة ظل خفيف */
-  margin-top: 100px; /* مسافة علوية */
-  margin-bottom: 10px; /* مسافة سفلية */
-  /* الخصائص الموجودة بالفعل للحاوية */
-  display: flex; /* للحفاظ على Flexbox الموجود */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 100px;
+  margin-bottom: 10px;
+  display: flex;
   flex-direction: column;
   align-items: center;
   gap: 15px;
 }
-
-/* لـ form-fields تحديدًا إذا أردت خصائص مختلفة قليلاً */
-.form-fields {
-    /* أي خصائص إضافية لـ form-fields فقط */
-}
-
-/* لـ buttons-container تحديدًا إذا أردت خصائص مختلفة قليلاً */
-#buttons-container {
-     /* أي خصائص إضافية لـ buttons-container فقط */
-     /* إزالة gap إذا لم تكن بحاجتها هنا */
-     gap: 0; /* أو يمكنك تعديل القيمة */
-}
-
 
 .form-fields select,
 .form-fields input {
   width: 260px;
   padding: 8px 12px;
   font-size: 1rem;
-  border: 1px solid #ccc; /* إضافة حدود للحقول نفسها */
-  border-radius: 4px; /* زوايا مستديرة للحقول */
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 button {
@@ -81,7 +73,6 @@ button {
   margin-top: 15px;
 }
 
-/* دعم التباين العالي */
 @media (forced-colors: active) {
   body {
     background: Window;
@@ -100,9 +91,7 @@ button {
 }
 
 @media (max-width: 600px) {
-  body {
-    padding: 10px;
-  }
+  body { padding: 10px; }
   .form-fields,
   #buttons-container {
     padding: 10px;
@@ -113,4 +102,3 @@ button {
     width: 100%;
   }
 }
-
