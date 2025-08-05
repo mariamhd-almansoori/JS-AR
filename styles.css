@@ -37,53 +37,58 @@ body.login-mode #form-and-buttons-container {
 }
 
 /* عنصر موحد للبطاقة الكاملة */
-.form-card {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  margin-top: 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  width: 320px;
+/* توسيط النموذج */
+#form-and-buttons-container {
+  max-width: 350px;
+  margin: 0 auto;
 }
 
-/* الحقول */
-.form-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* حجم موحد لحقول الإدخال + زر */
+.form-fields select,
+.form-fields input,
+#buttons-container button {
   width: 100%;
+  box-sizing: border-box;
 }
 
-/* الأزرار */
-#buttons-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-}
-
-button {
+/* تحسين مظهر الزر */
+#buttons-container button {
+  margin: 10px 0;
   padding: 12px;
   font-size: 1rem;
-  background-color: #ffffff;
-  border: 1px solid #333;
+  border: 1.5px solid #333;
   border-radius: 6px;
-  transition: 0.3s;
+  background-color: white;
+  transition: all 0.2s ease-in-out;
+}
+#buttons-container button:hover {
+  background-color: #eee;
 }
 
-button:hover {
-  background-color: #f2f2f2;
-}
-
-#error-message {
-  color: red;
+/* تنسيق الرسالة */
+#message-container {
+  margin-top: 20px;
+  font-size: 1.3rem;
   font-weight: bold;
-  margin-top: 15px;
+  color: green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* صورة ✅ إن أحببت إضافتها */
+#message-container img {
+  width: 24px;
+  height: 24px;
+}
+
+/* توسيط كامل للرسالة */
+.center-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 20vh;
 }
 
 @media (forced-colors: active) {
@@ -115,4 +120,5 @@ button:hover {
     width: 100%;
   }
 }
+
 
