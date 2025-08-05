@@ -1,346 +1,173 @@
-// يتم تشغيل الكود بعد تحميل عناصر DOM بالكامل
 document.addEventListener('DOMContentLoaded', () => {
-
-  // بما أننا نستخدم Sentry الآن، قد تحتاج إلى استيراده إذا كنت تستخدم وحدات (Modules)
-  // إذا كنت تستخدم <script src="script.js"> بدون type="module"، فلن تحتاج لهذا الاستيراد هنا
-  // لأن Sentry سيكون متاحًا كمتغير عام (Global)
-  // import * as Sentry from '@sentry/browser'; // قم بإلغاء التعليق إذا كنت تستخدم وحدات
-
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token') || '';
-  // userFingerprint سيتم تعيينه بواسطة Loader Script في HTML
-  // let userFingerprint = null; // لم نعد نحتاج هذا المتغير المحلي بعد استخدام window.userFingerprint
   let userEmail = null;
 
-  // دالة عرض الرسائل داخل الصفحة (تم تحديثها لمرونة أفضل و CSS Classes)
   function showMessage(msg, {
-      elementId = "status-message",
-      success = true,
-      duration = null, // بالميلي ثانية مثال: 5000 = 5 ثواني
-      focus = false
+    elementId = "status-message",
+    success = true,
+    duration = null,
+    focus = false
   } = {}) {
-      const el = document.getElementById(elementId);
-      if (el) {
-          el.textContent = msg;
-          // إزالة الفئات القديمة قبل إضافة الجديدة
-          el.classList.remove("hidden", "success", "error");
-          // إضافة فئة success أو error بناءً على النتيجة
-          el.classList.add(success ? "success" : "error");
-          el.setAttribute("role", "status"); // من أجل الوصولية
-
-          // إزالة style.color القديم المباشر
-          el.style.color = "";
-
-          if (focus) el.focus();
-
-          // إخفاء الرسالة بعد مدة معينة
-          if (duration) {
-              setTimeout(() => {
-                  el.classList.add("hidden");
-                  el.textContent = ""; // مسح المحتوى عند الإخفاء
-              }, duration);
-          } else {
-             // تأكد من إظهار العنصر إذا لم يكن مخفيًا بالفعل
-             // هذا قد يكون مفيدًا إذا لم يتم استخدام duration
-             el.classList.remove("hidden");
-          }
+    const el = document.getElementById(elementId);
+    if (el) {
+      el.textContent = msg;
+      el.classList.remove("hidden", "success", "error");
+      el.classList.add(success ? "success" : "error");
+      el.setAttribute("role", "status");
+      el.style.color = "";
+      if (focus) el.focus();
+      if (duration) {
+        setTimeout(() => {
+          el.classList.add("hidden");
+          el.textContent = "";
+        }, duration);
       } else {
-          alert(msg); // في حال لم يوجد العنصر
-      }
-  }
-
-
-  // ------------------------------------------------------------
-  // بصمة الجهاز (تم نقل منطق التحميل إلى Loader Script في HTML)
-  // تم حذف كتلة الكود هنا بالكامل
-
-  // ------------------------------------------------------------
-  // تسجيل الدخول بـ Google (طريقة Google Identity Services الجديدة)
-  // تأكد أن مكتبة Google Identity Services (gsi/client) محملة في HTML async defer
-  function initGoogleSignIn() {
-    // نتحقق من وجود google.accounts.id الذي توفره المكتبة الجديدة
-    if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-      console.log("Google Identity Services library loaded."); // تأكيد التحميل
-
-      google.accounts.id.initialize({
-        client_id: '250943951703-sbgdp0c7f7mvvp2q5o705dolc8j4i9tf.apps.googleusercontent.com', // تأكد من أن هذا هو Client ID الصحيح
-        callback: handleCredentialResponse, // الدالة التي ستعالج الاستجابة
-        ux_mode: 'popup' // أو 'redirect'
-      });
-
-      const googleSignInButton = document.getElementById('g_id_signin');
-      if (googleSignInButton) {
-        google.accounts.id.renderButton(googleSignInButton, {
-          theme: 'outline', // مظهر الزر
-          size: 'large', // حجم الزر
-          locale: 'ar' // لغة الزر
-          // يمكن إضافة خصائص أخرى مثل width أو shape
-        });
-        // زر Google يكون مرئيا افتراضيا، لا نحتاج لإزالة hidden هنا
-        //googleSignInButton.classList.remove('hidden'); // تم حذف هذا السطر
-      } else {
-        console.error("Element with ID 'g_id_signin' not found.");
-        if (typeof Sentry !== 'undefined' && Sentry.captureMessage) {
-             Sentry.captureMessage("Google Sign-In button element not found.", Sentry.SeverityLevel.Error);
-        }
-         // عرض رسالة خطأ للمستخدم
-         showMessage("❌ عنصر زر تسجيل الدخول بـ Google غير موجود في الصفحة.", { success: false, focus: true });
+        el.classList.remove("hidden");
       }
     } else {
-      console.error("Google Identity Services library not loaded.");
-       if (typeof Sentry !== 'undefined' && Sentry.captureMessage) {
-           Sentry.captureMessage("Google Identity Services library not loaded.", Sentry.SeverityLevel.Error);
-      }
-      const errorMessageElement = document.getElementById('error-message');
-      if (errorMessageElement) {
-        errorMessageElement.textContent = "خدمة تسجيل الدخول بـ Google غير متوفرة.";
-        errorMessageElement.classList.remove('hidden'); // تأكد من إظهار رسالة الخطأ هذه
-      }
-       // عرض رسالة خطأ للمستخدم باستخدام showMessage الجديدة
-       showMessage("❌ خدمة تسجيل الدخول بـ Google غير متوفرة.", { elementId: "error-message", success: false, focus: true });
+      alert(msg);
     }
   }
 
-  // الدالة التي يتم استدعاؤها بعد نجاح تسجيل الدخول بـ Google
+  function initGoogleSignIn() {
+    if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+      console.log("Google Identity Services loaded.");
+      google.accounts.id.initialize({
+        client_id: '250943951703-sbgdp0c7f7mvvp2q5o705dolc8j4i9tf.apps.googleusercontent.com',
+        callback: handleCredentialResponse,
+        ux_mode: 'popup'
+      });
+      const gBtn = document.getElementById("g_id_signin");
+      if (gBtn) {
+        google.accounts.id.renderButton(gBtn, {
+          theme: "outline",
+          size: "large",
+          width: "300",
+          locale: "ar"
+        });
+      }
+    } else {
+      showMessage("❌ خدمة تسجيل الدخول بـ Google غير متوفرة.", { elementId: "error-message", success: false, focus: true });
+    }
+  }
+
   function handleCredentialResponse(response) {
-    // التحقق من صحة الـ ID Token مع Google
     fetch('https://oauth2.googleapis.com/tokeninfo?id_token=' + response.credential)
       .then(res => {
-        if (!res.ok) {
-           // التقاط خطأ HTTP صريح في Sentry
-           if (typeof Sentry !== 'undefined' && Sentry.captureMessage) {
-                Sentry.captureMessage(`HTTP error fetching Google token info! status: ${res.status}`, Sentry.SeverityLevel.Error);
-           }
-           throw new Error(`HTTP error fetching token info! status: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`Google token error ${res.status}`);
         return res.json();
       })
       .then(data => {
-        userEmail = data.email; // تخزين البريد الإلكتروني للمستخدم
-        console.log("User logged in with email:", userEmail);
-
-        // إبلاغ Sentry عن المستخدم الحالي (إذا كانت Sentry متاحة)
+        userEmail = data.email;
         if (typeof Sentry !== 'undefined' && Sentry.setUser) {
-            Sentry.setUser({ email: userEmail });
-            console.log("Sentry user context set."); // تأكيد تعيين المستخدم في Sentry
+          Sentry.setUser({ email: userEmail });
         }
 
-        // *** تعديل هنا: اخفِ زر جوجل وأظهر الحاوية الرئيسية الجديدة ***
-        // تأكد أن هذه الـ IDs موجودة في HTML وأن form-and-buttons-container يحمل الفئة hidden في HTML
-        document.getElementById('g_id_signin')?.classList.add('hidden'); // إخفاء زر Google
-        //document.getElementById('buttons-container')?.classList.remove('hidden'); // حذف هذا السطر
-        //document.getElementById('form-fields')?.classList.remove('hidden'); // حذف هذا السطر
-        document.getElementById('form-and-buttons-container')?.classList.remove('hidden'); // إظهار الحاوية الرئيسية
+        document.body.classList.remove("login-mode");
+        document.getElementById('google-login-container')?.remove();
+        document.getElementById('form-and-buttons-container')?.classList.remove('hidden');
 
-        // تهيئة حقل الهاتف وإعداد أزرار Check-in/out
         setupPhoneInput();
-        setupCheckButtons();
+        setupFormSubmit();
 
-        console.log("Google Sign-In successful, showing form."); // تأكيد منطق الإظهار
-
+        console.log("Login successful:", userEmail);
       })
       .catch(err => {
-        console.error("Error fetching Google token info:", err);
-        // التقاط الخطأ في Sentry عند فشل التحقق من رمز جوجل
-        if (typeof Sentry !== 'undefined' && Sentry.captureException) {
-             Sentry.captureException(err, {
-                  extra: {
-                      response: response // يمكنك تضمين استجابة الـ id token هنا إذا أردت
-                  }
-             });
-        }
-        // عرض رسالة خطأ للمستخدم
-        showMessage("❌ حدث خطأ أثناء التحقق من تسجيل الدخول بـ Google", { success: false, focus: true, duration: 10000 }); // عرض لـ 10 ثواني
-        const errorMessageElement = document.getElementById('error-message');
-        if (errorMessageElement) {
-          errorMessageElement.textContent = "فشل التحقق من معلومات تسجيل الدخول بـ Google.";
-          errorMessageElement.classList.remove('hidden'); // تأكد من إظهار رسالة الخطأ هذه
-        }
+        showMessage("❌ حدث خطأ أثناء التحقق من تسجيل الدخول بـ Google", { success: false, focus: true, duration: 10000 });
+        if (typeof Sentry !== 'undefined') Sentry.captureException?.(err);
       });
   }
 
-  // إعداد حقل الهاتف ليضيف بادئة 9715
   function setupPhoneInput() {
     const phoneInput = document.getElementById("phone");
-    if (phoneInput) {
-      console.log("Phone input element found, setting up."); // تأكيد العثور على العنصر
-      phoneInput.addEventListener("focus", () => {
-        if (!phoneInput.value.startsWith("9715")) phoneInput.value = "9715";
-      });
-      phoneInput.addEventListener("keydown", e => {
-        const prefix = "9715";
-        // منع حذف أو مسح البادئة 9715
-        if (phoneInput.selectionStart !== null && phoneInput.selectionStart < prefix.length &&
-            (e.key === "Backspace" || e.key === "Delete")) {
-          e.preventDefault();
-        }
-         // السماح بالأسهم، Home، End، Tab
-        if (e.key === "ArrowLeft" || e.key === "ArrowRight" || e.key === "Home" || e.key === "End" || e.key === "Tab") {
-            return;
-        }
-        // منع إدخال أحرف غير أرقام بعد البادئة
-         if (phoneInput.selectionStart !== null && phoneInput.selectionStart >= prefix.length) {
-             if (!/\d/.test(e.key) && e.key !== "Backspace" && e.key !== "Delete") {
-                 e.preventDefault();
-             }
-         } else if (phoneInput.selectionStart !== null && phoneInput.selectionStart < prefix.length) {
-              // منع إدخال أي شيء في البادئة
-              e.preventDefault();
-         }
-      });
-       // منع اللصق الذي يغير البادئة
-       phoneInput.addEventListener("paste", e => {
-            const pasteData = e.clipboardData.getData('text');
-            const prefix = "9715";
-            if (!pasteData.startsWith(prefix)) {
-                 // يمكنك محاولة تصحيح اللصق هنا أو منعه بالكامل
-                 console.warn("Paste detected, might not match prefix.");
-                 // مثال: محاولة إجبار البادئة
-                 // e.preventDefault();
-                 // phoneInput.value = prefix + pasteData.replace(/^9715/, '');
-            }
-       });
-    } else {
-      console.error("Element with ID 'phone' not found for setup.");
-       if (typeof Sentry !== 'undefined' && Sentry.captureMessage) {
-            Sentry.captureMessage("Phone input element not found for setup.", Sentry.SeverityLevel.Error);
-       }
-    }
+    if (!phoneInput) return;
+    phoneInput.addEventListener("focus", () => {
+      if (!phoneInput.value.startsWith("9715")) phoneInput.value = "9715";
+    });
+    phoneInput.addEventListener("keydown", e => {
+      const prefix = "9715";
+      if (phoneInput.selectionStart !== null && phoneInput.selectionStart < prefix.length &&
+          (e.key === "Backspace" || e.key === "Delete")) {
+        e.preventDefault();
+      }
+      if (e.key.length === 1 && phoneInput.selectionStart < prefix.length) {
+        e.preventDefault();
+      }
+      if (phoneInput.selectionStart >= prefix.length && !/\d/.test(e.key) &&
+          !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Home", "End", "Tab"].includes(e.key)) {
+        e.preventDefault();
+      }
+    });
+    phoneInput.addEventListener("paste", e => {
+      const data = e.clipboardData.getData('text');
+      if (!data.startsWith("9715")) e.preventDefault();
+    });
   }
 
-  // التحقق من صحة صيغة رقم الهاتف (يبدأ بـ 9715 ويليه 8 أرقام)
   function isValidPhone(phone) {
     return /^9715\d{8}$/.test(phone);
   }
 
-  // إعداد معالجات الأحداث لأزرار Check-in/out
-  function setupCheckButtons() {
-    console.log("Setting up check buttons."); // تأكيد إعداد الأزرار
-    ['check-in', 'check-out'].forEach(id => {
-      const button = document.getElementById(id);
-      const phoneInput = document.getElementById("phone");
-      const usernameInput = document.getElementById("username");
+  function setupFormSubmit() {
+    const form = document.getElementById("attendance-form");
+    const phoneInput = document.getElementById("phone");
+    const usernameInput = document.getElementById("username");
 
-      if (button && phoneInput && usernameInput) {
-        console.log(`Button ${id} found, adding listener.`); // تأكيد العثور على الزر
-        button.addEventListener('click', () => {
-          const name = usernameInput.value.trim();
-          const phone = phoneInput.value.trim();
+    if (!form || !phoneInput || !usernameInput) return;
 
-          // التحقق من تعبئة الحقول
-          if (!name || !phone) {
-            showMessage("❗ الرجاء تعبئة الاسم ورقم الجوال.", { success: false, focus: true, duration: 5000 });
-            if (typeof Sentry !== 'undefined' && Sentry.captureMessage) {
-                 Sentry.captureMessage("User did not fill name or phone", Sentry.SeverityLevel.Warning);
-            }
-            return; // إيقاف الدالة إذا كانت الحقول فارغة
-          }
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = usernameInput.value.trim();
+      const phone = phoneInput.value.trim();
+      const action = e.submitter?.value;
 
-            // التحقق من صحة صيغة رقم الهاتف
-            if (!isValidPhone(phone)) {
-              showMessage("❗ الرقم غير صحيح بصيغة 9715XXXXXXXX.", { success: false, focus: true, duration: 5000 });
-              if (typeof Sentry !== 'undefined' && Sentry.captureMessage) {
-                Sentry.captureMessage("Invalid phone format entered", Sentry.SeverityLevel.Warning);
-              }
-              return; // إيقاف الدالة إذا كانت الصيغة غير صحيحة
-            }
-          
-          // جلب عنوان الـ IP ثم إرسال البيانات
-          fetch('https://api.ipify.org?format=json')
-            .then(response => response.json())
-            .then(data => {
-              const userIp = data.ip;
-              const payload = {
-                email: userEmail,
-                name: name,
-                phone: phone,
-                fingerprint: window.userFingerprint,
-                operation: id === 'check-in' ? 'check-in' : 'check-out',
-                token: token,
-                ip: userIp
-              };
-          
-              return fetch('https://script.google.com/macros/s/AKfycby02ie58KVNwgkmvsLt_IaXnwtJkitKoEcyFIXaplElxGQ6Y9MJ-7_fViZdjq81fxPvgw/exec', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-              });
-            })
-            .then(r => {
-              console.log("Received response from Google Script:", r);
-              if (!r.ok) {
-                return r.json().catch(() => { throw new Error(`Google Script HTTP error! status: ${r.status}`); });
-              }
-              return r.json();
-            })
-            .then(data => {
-              console.log("Google Script response data:", data);
-              if (data && typeof data.success !== 'undefined') {
-                showMessage(data.success ? "✅ تم التسجيل بنجاح" : "❌ فشل التسجيل", { success: data.success, duration: 5000 });
-                if (typeof Sentry !== 'undefined' && Sentry.addBreadcrumb) {
-                  Sentry.addBreadcrumb({
-                    category: 'action',
-                    message: `Google Script submission result: ${data.success ? 'Success' : 'Failure'}`,
-                    level: data.success ? Sentry.SeverityLevel.Info : Sentry.SeverityLevel.Error,
-                    data: payload
-                  });
-                }
-              } else {
-                showMessage("❌ لم يتم استقبال استجابة صحيحة من السكربت.", { success: false, duration: 5000 });
-              }
-            })
-            .catch(error => {
-              console.error('Error:', error);
-              showMessage("❌ حدث خطأ أثناء الإرسال.", { success: false, duration: 5000 });
-            });
-              // استجابة غير متوقعة من السكربت
-              showMessage("⚠️ تم الإرسال، ولكن استجابة الخادم غير متوقعة.", { success: false, duration: 10000, focus: true });
-              console.warn("Unexpected response from Google Script:", data);
-               // التقاط رسالة تحذير في Sentry للاستجابة غير المتوقعة
-               if (typeof Sentry !== 'undefined' && Sentry.captureMessage) {
-                   Sentry.captureMessage("Unexpected response from Google Script", Sentry.SeverityLevel.Warning, {
-                        extra: { responseData: data }
-                   });
-               }
-            }
-          })
-          .catch(err => {
-            // التعامل مع الأخطاء التي تحدث أثناء fetch أو معالجة الاستجابة
-            console.error("Error sending data to Google Script:", err);
-            // التقاط الخطأ في Sentry
-             if (typeof Sentry !== 'undefined' && Sentry.captureException) {
-                  Sentry.captureException(err, {
-                       extra: { // سياق إضافي للخطأ
-                           payload: payload // البيانات التي حاولت إرسالها
-                           // يمكنك إضافة معلومات أخرى إذا توفرت من الخطأ
-                       }
-                  });
-             }
-             // عرض رسالة خطأ للمستخدم
-             showMessage("❌ حدث خطأ أثناء إرسال البيانات: " + (err.message || err), { success: false, focus: true, duration: 10000 });
-          });
-        }); // نهاية addEventListener click
-      } else {
-        console.error(`Button ${id} or phone/username input not found for setup.`);
-        if (typeof Sentry !== 'undefined' && Sentry.captureMessage) {
-            Sentry.captureMessage(`Button ${id} or phone/username input not found for setup.`, Sentry.SeverityLevel.Error);
-        }
+      if (!name || !phone) {
+        showMessage("❗ الرجاء تعبئة الاسم ورقم الجوال.", { success: false, focus: true, duration: 5000 });
+        return;
       }
-    }); // نهاية forEach
-  } // نهاية setupCheckButtons
 
-  // ------------------------------------------------------------
-  // استدعاء الدوال الرئيسية عند تحميل DOM بالكامل
-  // تأكد من استدعاء initGoogleSignIn هنا
+      if (!isValidPhone(phone)) {
+        showMessage("❗ الرقم غير صحيح بصيغة 9715XXXXXXXX.", { success: false, focus: true, duration: 5000 });
+        return;
+      }
+
+      let payload = {};
+      fetch('https://api.ipify.org?format=json')
+        .then(res => res.json())
+        .then(data => {
+          payload = {
+            email: userEmail,
+            name,
+            phone,
+            fingerprint: window.userFingerprint,
+            operation: action,
+            token,
+            ip: data.ip
+          };
+          return fetch('https://script.google.com/macros/s/AKfycby02ie58KVNwgkmvsLt_IaXnwtJkitKoEcyFIXaplElxGQ6Y9MJ-7_fViZdjq81fxPvgw/exec', {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          });
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.success) {
+            showMessage("✅ تم التسجيل بنجاح", { success: true, duration: 5000 });
+          } else {
+            showMessage("❌ فشل التسجيل", { success: false, duration: 5000 });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          showMessage("❌ حدث خطأ أثناء الإرسال.", { success: false, duration: 5000 });
+          if (typeof Sentry !== 'undefined') {
+            Sentry.captureException?.(err, { extra: { payload } });
+          }
+        });
+    });
+  }
+
   initGoogleSignIn();
-
-  // ملاحظة: setupPhoneInput و setupCheckButtons يتم استدعاؤهما بعد نجاح تسجيل الدخول في handleCredentialResponse
-
-}); // نهاية DOMContentLoaded event listener
-
-
-// قد تحتاج لبعض الدوال المساعدة أو المتغيرات خارج DOMContentLoaded إذا كانت ضرورية عالميًا،
-// لكن معظم الكود المتعلق بالتفاعل مع الصفحة يجب أن يكون بداخله.
-// window.userFingerprint و userEmail تم تعريفهما في نطاقات مناسبة الآن.
-
-
+});
