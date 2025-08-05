@@ -154,7 +154,17 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(res => res.json())
         .then(data => {
           if (data && data.success) {
-            showMessage("✅ تم التسجيل بنجاح", { success: true, duration: 5000 });
+            messageContainer.innerHTML = `
+              <div class="center-message">
+                ✅ تم التسجيل بنجاح
+              </div>
+            `;
+            formContainer.classList.add('hidden');
+            
+            setTimeout(() => {
+              window.location.href = "https://www.google.com"; // ← غيّره حسب رغبتك
+            }, 3000);
+
           } else {
             showMessage("❌ فشل التسجيل", { success: false, duration: 5000 });
           }
@@ -171,3 +181,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initGoogleSignIn();
 });
+
