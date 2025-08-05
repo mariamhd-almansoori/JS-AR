@@ -1,4 +1,3 @@
-
 // يتم تشغيل الكود بعد تحميل عناصر DOM بالكامل
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -343,4 +342,5 @@ document.addEventListener('DOMContentLoaded', () => {
 // قد تحتاج لبعض الدوال المساعدة أو المتغيرات خارج DOMContentLoaded إذا كانت ضرورية عالميًا،
 // لكن معظم الكود المتعلق بالتفاعل مع الصفحة يجب أن يكون بداخله.
 // window.userFingerprint و userEmail تم تعريفهما في نطاقات مناسبة الآن.
+
 
