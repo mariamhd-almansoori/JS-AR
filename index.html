@@ -11,90 +11,71 @@
       Sentry.onLoad(function() {
         Sentry.init({
             dsn: "https://7b23924c66cbc434e36d765203ee6d55@o4509758163451904.ingest.de.sentry.io/4509758170988624",
-            release: "AttendanceApp@1.0.0", // تأكد من تحديث هذا عند النشر
+            release: "AttendanceApp@1.0.0",
             tracesSampleRate: 1.0,
             replaysSessionSampleRate: 0.1,
             replaysOnErrorSampleRate: 1.0,
-          });
+        });
       });
-    </script>
+  </script>
 
   <!-- Google Identity Services Script -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-  <!-- FingerprintJS Open Source Loader Script -->
+  <!-- FingerprintJS Loader -->
   <script>
     window.userFingerprint = 'getting';
-    import('https://openfpcdn.io/fingerprintjs/v4') // أو cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js
-      .then(FingerprintJS => {
-        if (FingerprintJS && FingerprintJS.load) {
-           FingerprintJS.load()
-            .then(fp => fp.get())
-            .then(result => {
-              window.userFingerprint = result.visitorId;
-              console.log("Fingerprint obtained via Loader Script:", window.userFingerprint);
-            })
-            .catch(error => {
-              console.error("Error getting fingerprint via Loader Script:", error);
-              window.userFingerprint = 'unavailable';
-              if (typeof Sentry !== 'undefined' && Sentry.captureException) {
-                   Sentry.captureException(error);
-              }
-            });
-        } else {
-             console.error("FingerprintJS library load failed via Loader Script.");
-             window.userFingerprint = 'load_failed';
-              if (typeof Sentry !== 'undefined' && Sentry.captureMessage) {
-                   Sentry.captureMessage("FingerprintJS library load failed via Loader Script.");
-              }
-        }
+    FingerprintJS.load()
+      .then(fp => fp.get())
+      .then(result => {
+        window.userFingerprint = result.visitorId;
+        console.log("Fingerprint obtained:", window.userFingerprint);
       })
       .catch(error => {
-           console.error("Failed to import FingerprintJS module via Loader Script:", error);
-           window.userFingerprint = 'import_failed';
-            if (typeof Sentry !== 'undefined' && Sentry.captureException) {
-                 Sentry.captureException(error);
-            }
+        console.error("Error getting fingerprint:", error);
+        window.userFingerprint = 'unavailable';
+        if (typeof Sentry !== 'undefined' && Sentry.captureException) {
+          Sentry.captureException(error);
+        }
       });
   </script>
 
   <link rel="stylesheet" href="styles.css"/>
 </head>
-<body>
-  <!-- العناصر العلوية -->
+<body class="login-mode">
+
+  <!-- زر تسجيل الدخول بـ Google -->
+  <div id="google-login-container">
+    <div id="g_id_signin"></div>
+  </div>
+
+  <!-- نموذج التسجيل -->
+  <form id="attendance-form">
+    <div id="form-and-buttons-container" class="hidden">
+
+      <div id="form-fields" class="form-fields">
+        <select id="username" name="username" required autocomplete="name">
+          <option value="">-- اختر الاسم --</option>
+          <option value="أحمد محمد">أحمد محمد</option>
+          <option value="سارة عبدالله">سارة عبدالله</option>
+          <option value="يوسف خالد">يوسف خالد</option>
+        </select>
+
+        <input type="tel" id="phone" name="phone" placeholder="9715XXXXXXXX" required autocomplete="tel" />
+        <small>مثال: 971501234567</small>
+      </div>
+
+      <div id="buttons-container">
+        <button type="submit" name="action" value="check-in">تسجيل الحضور</button>
+        <button type="submit" name="action" value="check-out">تسجيل الانصراف</button>
+      </div>
+
+    </div>
+  </form>
+
   <div id="status-message" class="hidden"></div>
   <div id="error-message" class="hidden"></div>
 
-  <!-- زر تسجيل الدخول بـ Google -->
-  <div id="g_id_signin"></div>
-
-  <!-- *** حاوية رئيسية جديدة للنموذج والأزرار (مخفية في البداية) *** -->
-  <div id="form-and-buttons-container" class="hidden">
-
-      <!-- حاوية حقول النموذج (الآن ليست مخفية بذاتها) -->
-      <div id="form-fields" class="form-fields">
-          <select id="username" required autocomplete="name">
-            <option value="">-- اختر الاسم --</option>
-            <option value="أحمد محمد">أحمد محمد</option>
-            <option value="سارة عبدالله">سارة عبدالله</option>
-            <option value="يوسف خالد">يوسف خالد</option>
-          </select>
-          <input type="tel" id="phone" placeholder="9715XXXXXXXX" required autocomplete="tel" />
-          <small>مثال: 971501234567</small>
-      </div>
-
-      <!-- حاوية الأزرار (الآن ليست مخفية بذاتها) -->
-      <div id="buttons-container">
-          <button id="check-in">تسجيل الحضور</button>
-          <button id="check-out">تسجيل الانصراف</button>
-      </div>
-
-  </div>
-  <!-- *** نهاية الحاوية الرئيسية الجديدة *** -->
-
-
-  <!-- سكريبتك الرئيسي في نهاية body -->
-  <script src="script.js"></script>
-
+  <script src="script.js" defer></script>
 </body>
 </html>
